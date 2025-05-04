@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-final color colors;
-final widget cardwidget;
-final function onpressed;
-
 const kactiveColor = Color(0xFF1D1E33);
 const kinactiveColor = Color(0xFF111320);
 const kBottomContainerHeight = 80.0;
@@ -13,12 +9,6 @@ const kbottemContainerStyle = TextStyle(
   fontSize: 30.0,
   fontWeight: FontWeight.bold,
 );
-
-cardwidget: column(
-children:<widget>[
-  Icons.text_decrease
-]
-)
 
 const kLabelStyle = TextStyle(
   fontSize: 20.0,
