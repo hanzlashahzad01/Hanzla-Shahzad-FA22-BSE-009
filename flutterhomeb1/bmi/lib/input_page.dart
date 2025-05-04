@@ -253,10 +253,14 @@ class RoundIconButton extends StatelessWidget {
 //         femaleColor = inactiveColor;
 //       } else {
 //         maleColor = inactiveColor;
+//       }
 //     }
+//     if (gender == Gender.female) {
 //       if (femaleColor == inactiveColor) {
+//         femaleColor = activeColor;
 //         maleColor = inactiveColor;
 //       } else {
+//         femaleColor = inactiveColor;
 //       }
 //     }
 //   }
