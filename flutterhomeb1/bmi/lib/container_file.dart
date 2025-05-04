@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+final color colors;
+final widget cardwidget;
+final function onpressed;
+
 const kactiveColor = Color(0xFF1D1E33);
 const kinactiveColor = Color(0xFF111320);
 const kBottomContainerHeight = 80.0;
