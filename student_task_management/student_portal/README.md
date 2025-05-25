@@ -1,16 +1,4 @@
-# student_portal
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![5](https://github.com/user-attachments/assets/8ce840e9-baf3-4855-a349-c1a82163fd63)
+![6](https://github.com/user-attachments/assets/f2a9c50f-fd34-4257-87da-aaa25211364d)
+![7](https://github.com/user-attachments/assets/511e72d5-d25d-49bf-b41f-8fe9f9e51020)
+![8](https://github.com/user-attachments/assets/66d94f10-ac3d-42bd-b06f-987e13a12b28)
