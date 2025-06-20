@@ -125,4 +125,14 @@ class ComplaintService {
           .length,
     };
   }
+
+  Future<List<ComplaintModel>> getAllComplaints() async {
+    final response = await _supabase
+        .from(AppConfig.complaintsTable)
+        .select()
+        .order('created_at', ascending: false);
+    return (response as List)
+        .map((json) => ComplaintModel.fromJson(json))
+        .toList();
+  }
 } 
