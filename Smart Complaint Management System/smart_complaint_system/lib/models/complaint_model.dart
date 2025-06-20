@@ -1,3 +1,5 @@
+import '../../services/complaint_service.dart';
+
 enum ComplaintStatus {
   submitted,
   inProgress,
