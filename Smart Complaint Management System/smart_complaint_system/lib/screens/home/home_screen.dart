@@ -31,9 +31,9 @@ class HomeScreen extends StatelessWidget {
       case UserRole.admin:
         return const AdminDashboard();
       case UserRole.hod:
-       return const HodDashboard();
+        return const HodDashboard();
       case UserRole.batchAdvisor:
-       return const AdvisorDashboard();
+        return const AdvisorDashboard();
       case UserRole.student:
         return const StudentDashboard();
       default:

@@ -13,7 +13,6 @@ import '../admin/admin_dashboard.dart';
 import '../hod/hod_dashboard.dart';
 import '../advisor/advisor_dashboard.dart';
 import '../student/student_dashboard.dart';
-import '../../services/complaint_service.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -24,35 +23,6 @@ class StudentDashboard extends StatefulWidget {
 
 class _StudentDashboardState extends State<StudentDashboard> {
   int _selectedIndex = 0;
-  List<ComplaintModel> _complaints = [];
-  bool _isLoading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadComplaints();
-  }
-
-  Future<void> _loadComplaints() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-    try {
-      final user = Provider.of<AuthProvider>(context, listen: false).currentUser!;
-      final complaints = await ComplaintService().getStudentComplaints(user.id);
-      setState(() {
-        _complaints = complaints;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +43,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                   MaterialPageRoute(
                     builder: (context) => const SubmitComplaintScreen(),
                   ),
-                ).then((_) => _loadComplaints());
+                );
               },
               child: const Icon(Icons.add),
             )
@@ -81,9 +51,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _buildDashboard(user),
+          _buildDashboard(user),
           const StudentComplaintsScreen(),
           const StudentProfileScreen(),
         ],
@@ -92,125 +60,107 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }
 
   Widget _buildDashboard(UserModel user) {
-    // Calculate stats
-    final total = _complaints.length;
-    final pending = _complaints.where((c) => c.status == ComplaintStatus.submitted || c.status == ComplaintStatus.inProgress).length;
-    final resolved = _complaints.where((c) => c.status == ComplaintStatus.resolved).length;
-    final rejected = _complaints.where((c) => c.status == ComplaintStatus.rejected).length;
-    final recent = _complaints.take(3).toList();
-
-    return RefreshIndicator(
-      onRefresh: _loadComplaints,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Card
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome, ${user.name}!',
-                      style: AppTheme.headingStyle,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Batch: ${user.batch ?? 'Not assigned'}',
-                      style: AppTheme.bodyStyle,
-                    ),
-                    Text(
-                      'Advisor: ${user.batchAdvisorEmail ?? 'Not assigned'}',
-                      style: AppTheme.bodyStyle,
-                    ),
-                  ],
-                ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Welcome Card
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome, ${user.name}!',
+                    style: AppTheme.headingStyle,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Batch: ${user.batch ?? 'Not assigned'}',
+                    style: AppTheme.bodyStyle,
+                  ),
+                  Text(
+                    'Advisor: ${user.batchAdvisorEmail ?? 'Not assigned'}',
+                    style: AppTheme.bodyStyle,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            // Quick Stats
-            Text(
-              'Quick Stats',
-              style: AppTheme.subheadingStyle,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Total Complaints',
-                    total.toString(),
-                    Icons.list_alt,
-                    AppTheme.primaryColor,
-                  ),
+          ),
+          const SizedBox(height: 24),
+          // Quick Stats
+          Text(
+            'Quick Stats',
+            style: AppTheme.subheadingStyle,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatCard(
+                  'Total Complaints',
+                  '0',
+                  Icons.list_alt,
+                  AppTheme.primaryColor,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Pending',
-                    pending.toString(),
-                    Icons.pending_actions,
-                    AppTheme.warningColor,
-                  ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatCard(
+                  'Pending',
+                  '0',
+                  Icons.pending_actions,
+                  AppTheme.warningColor,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Resolved',
-                    resolved.toString(),
-                    Icons.check_circle,
-                    AppTheme.successColor,
-                  ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatCard(
+                  'Resolved',
+                  '0',
+                  Icons.check_circle,
+                  AppTheme.successColor,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Rejected',
-                    rejected.toString(),
-                    Icons.cancel,
-                    AppTheme.errorColor,
-                  ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStatCard(
+                  'Rejected',
+                  '0',
+                  Icons.cancel,
+                  AppTheme.errorColor,
                 ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Recent Activity
+          Text(
+            'Recent Activity',
+            style: AppTheme.subheadingStyle,
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 0, // TODO: Add recent activity items
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                return const ListTile(
+                  title: Text('No recent activity'),
+                  subtitle: Text('Your recent complaints will appear here'),
+                );
+              },
             ),
-            const SizedBox(height: 24),
-            // Recent Activity
-            Text(
-              'Recent Activity',
-              style: AppTheme.subheadingStyle,
-            ),
-            const SizedBox(height: 16),
-            Card(
-              child: recent.isEmpty
-                  ? const ListTile(
-                      title: Text('No recent activity'),
-                      subtitle: Text('Your recent complaints will appear here'),
-                    )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: recent.length,
-                      separatorBuilder: (context, index) => const Divider(),
-                      itemBuilder: (context, index) {
-                        final complaint = recent[index];
-                        return ListTile(
-                          title: Text(complaint.title),
-                          subtitle: Text(complaint.description),
-                          trailing: Text(complaint.status.toString().split('.').last),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
