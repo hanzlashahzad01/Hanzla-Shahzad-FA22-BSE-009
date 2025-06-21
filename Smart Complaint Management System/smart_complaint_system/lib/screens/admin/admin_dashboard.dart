@@ -23,10 +23,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Future<void> _fetchComplaints() async {
-    // Fetch only complaints escalated to Admin
+    // Fetch all complaints for admin
     final complaints = await ComplaintService().getAllComplaints();
+    if (!mounted) return;
     setState(() {
-      _complaints = complaints.where((c) => c.status == ComplaintStatus.escalated_to_admin).toList();
+      _complaints = complaints;
       _loading = false;
     });
   }
@@ -39,6 +40,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       user.id,
       user.name,
     );
+    if (!mounted) return;
     _fetchComplaints();
   }
 
@@ -50,7 +52,35 @@ class _AdminDashboardState extends State<AdminDashboard> {
       user.id,
       user.name,
     );
+    if (!mounted) return;
     _fetchComplaints();
+  }
+
+  String _getReadableStatus(ComplaintModel c) {
+    switch (c.status) {
+      case ComplaintStatus.resolved:
+        if ((c.currentHandlerName ?? '').isNotEmpty) {
+          return 'Solved by ${c.currentHandlerName}';
+        } else {
+          return 'Solved';
+        }
+      case ComplaintStatus.rejected:
+        if ((c.currentHandlerName ?? '').isNotEmpty) {
+          return 'Rejected by ${c.currentHandlerName}';
+        } else {
+          return 'Rejected';
+        }
+      case ComplaintStatus.escalated_to_admin:
+        return 'Forwarded by HOD';
+      case ComplaintStatus.escalated_to_hod:
+        return 'Forwarded by Batch Advisor';
+      case ComplaintStatus.in_progress:
+        return 'In Progress';
+      case ComplaintStatus.submitted:
+        return 'Submitted';
+      default:
+        return c.status.toString().split('.').last;
+    }
   }
 
   @override
@@ -114,8 +144,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Description: ${c.description}'),
-                            Text('Status: ${c.status.toString().split('.').last}'),
-                            Text('Date: ${c.createdAt.toLocal().toString().split(".")[0]}'),
+                            Text('Student: ${c.studentName}'),
+                            Text('Status: ${_getReadableStatus(c)}'),
+                            if ((c.currentHandlerName ?? '').isNotEmpty)
+                              Text('Handler: ${c.currentHandlerName}'),
+                            Text('Created: ${c.createdAt.toLocal().toString().split(".")[0]}'),
+                            Text('Last Updated: ${c.updatedAt.toLocal().toString().split(".")[0]}'),
                           ],
                         ),
                         trailing: Row(

@@ -54,12 +54,18 @@ class _HodDashboardState extends State<HodDashboard> {
   }
 
   Future<void> _forwardToAdmin(ComplaintModel complaint) async {
-    await ComplaintService().updateComplaintStatus(
-      complaint.id,
-      ComplaintStatus.escalated_to_admin,
-      null,
-      null,
-    );
+    print('Forwarding complaint to Director: ${complaint.id}');
+    try {
+      await ComplaintService().updateComplaintStatus(
+        complaint.id,
+        ComplaintStatus.escalated_to_admin,
+        null,
+        null,
+      );
+      print('Forwarded!');
+    } catch (e) {
+      print('Error forwarding to Director: $e');
+    }
     _fetchComplaints();
   }
 
@@ -155,7 +161,7 @@ class _HodDashboardState extends State<HodDashboard> {
                               onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.escalated_to_admin
                                   ? null
                                   : () => _forwardToAdmin(c),
-                              child: const Text('Forward to Admin'),
+                              child: const Text('Forward to Director'),
                             ),
                           ],
                         ),
