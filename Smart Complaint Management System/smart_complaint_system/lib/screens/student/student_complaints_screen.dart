@@ -59,6 +59,9 @@ class _StudentComplaintsScreenState extends State<StudentComplaintsScreen> {
         return AppTheme.successColor;
       case ComplaintStatus.rejected:
         return AppTheme.errorColor;
+      case ComplaintStatus.escalated_to_admin:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -74,6 +77,9 @@ class _StudentComplaintsScreenState extends State<StudentComplaintsScreen> {
         return 'Solved';
       case ComplaintStatus.rejected:
         return 'Rejected';
+      case ComplaintStatus.escalated_to_admin:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

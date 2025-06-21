@@ -292,6 +292,9 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
         return Icons.check_circle;
       case ComplaintStatus.rejected:
         return Icons.cancel;
+      case ComplaintStatus.escalated_to_admin:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -307,6 +310,9 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
         return AppTheme.successColor;
       case ComplaintStatus.rejected:
         return AppTheme.errorColor;
+      case ComplaintStatus.escalated_to_admin:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -322,6 +328,9 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
         return 'Resolved';
       case ComplaintStatus.rejected:
         return 'Rejected';
+      case ComplaintStatus.escalated_to_admin:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

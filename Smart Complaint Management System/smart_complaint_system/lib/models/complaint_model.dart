@@ -5,7 +5,7 @@ enum ComplaintStatus {
   in_progress,
   escalated_to_hod,
   resolved,
-  rejected
+  rejected, escalated_to_admin
 }
 
 class ComplaintModel {
