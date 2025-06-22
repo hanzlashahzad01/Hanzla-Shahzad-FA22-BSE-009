@@ -15,6 +15,7 @@ class HodDashboard extends StatefulWidget {
 class _HodDashboardState extends State<HodDashboard> {
   List<ComplaintModel> _complaints = [];
   bool _loading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -23,12 +24,23 @@ class _HodDashboardState extends State<HodDashboard> {
   }
 
   Future<void> _fetchComplaints() async {
-    // Fetch only complaints escalated to HOD
-    final complaints = await ComplaintService().getAllComplaints();
-    setState(() {
-      _complaints = complaints.where((c) => c.status == ComplaintStatus.escalated_to_hod).toList();
-      _loading = false;
-    });
+    try {
+      final complaints = await ComplaintService().getAllComplaints();
+      setState(() {
+        _complaints = complaints
+            .where((c) => c.status == ComplaintStatus.escalated_to_hod)
+            .toList();
+        _loading = false;
+        _errorMessage = null;
+      });
+    } catch (e, s) {
+      print('Error fetching HOD complaints: $e');
+      print('Stack trace: $s');
+      setState(() {
+        _loading = false;
+        _errorMessage = 'Failed to load complaints.\n\nError: $e';
+      });
+    }
   }
 
   Future<void> _solveComplaint(ComplaintModel complaint) async {
@@ -115,60 +127,81 @@ class _HodDashboardState extends State<HodDashboard> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _complaints.isEmpty
-              ? const Center(child: Text('No complaints assigned.'))
-              : ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _complaints.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final c = _complaints[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(c.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Description: ${c.description}'),
-                            Text('Status: ${c.status.toString().split('.').last}'),
-                            Text('Date: ${c.createdAt.toLocal().toString().split(".")[0]}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ElevatedButton(
-                              onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected
-                                  ? null
-                                  : () => _solveComplaint(c),
-                              child: const Text('Solve'),
+          : _errorMessage != null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              : _complaints.isEmpty
+                  ? const Center(child: Text('No complaints forwarded to you.'))
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _complaints.length,
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemBuilder: (context, index) {
+                        final c = _complaints[index];
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  title: Text(c.title),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Description: ${c.description}'),
+                                      Text('Student: ${c.studentName}'),
+                                      Text('Status: ${c.status?.toString().split('.').last ?? 'Unknown'}'),
+                                      Text('Date: ${c.createdAt != null ? c.createdAt.toLocal().toString().split(".")[0] : 'Unknown'}'),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  alignment: WrapAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected
+                                          ? null
+                                          : () => _solveComplaint(c),
+                                      child: const Text('Solve'),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      onPressed: c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.resolved
+                                          ? null
+                                          : () => _rejectComplaint(c),
+                                      child: const Text('Reject'),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange,
+                                      ),
+                                      onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.escalated_to_admin
+                                          ? null
+                                          : () => _forwardToAdmin(c),
+                                      child: const Text('Forward to Director'),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              onPressed: c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.resolved
-                                  ? null
-                                  : () => _rejectComplaint(c),
-                              child: const Text('Reject'),
-                            ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                              ),
-                              onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.escalated_to_admin
-                                  ? null
-                                  : () => _forwardToAdmin(c),
-                              child: const Text('Forward to Director'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
     );
   }
 } 

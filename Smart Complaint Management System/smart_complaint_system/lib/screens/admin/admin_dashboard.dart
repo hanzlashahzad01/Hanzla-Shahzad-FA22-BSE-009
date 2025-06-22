@@ -138,38 +138,47 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   itemBuilder: (context, index) {
                     final c = _complaints[index];
                     return Card(
-                      child: ListTile(
-                        title: Text(c.title),
-                        subtitle: Column(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Description: ${c.description}'),
-                            Text('Student: ${c.studentName}'),
-                            Text('Status: ${_getReadableStatus(c)}'),
-                            if ((c.currentHandlerName ?? '').isNotEmpty)
-                              Text('Handler: ${c.currentHandlerName}'),
-                            Text('Created: ${c.createdAt.toLocal().toString().split(".")[0]}'),
-                            Text('Last Updated: ${c.updatedAt.toLocal().toString().split(".")[0]}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ElevatedButton(
-                              onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected
-                                  ? null
-                                  : () => _solveComplaint(c),
-                              child: const Text('Solve'),
-                            ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
+                            ListTile(
+                              title: Text(c.title),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Description: ${c.description}'),
+                                  Text('Student: ${c.studentName}'),
+                                  Text('Status: ${_getReadableStatus(c)}'),
+                                  if ((c.currentHandlerName ?? '').isNotEmpty)
+                                    Text('Handler: ${c.currentHandlerName}'),
+                                  Text('Created: ${c.createdAt.toLocal().toString().split(".")[0]}'),
+                                  Text('Last Updated: ${c.updatedAt.toLocal().toString().split(".")[0]}'),
+                                ],
                               ),
-                              onPressed: c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.resolved
-                                  ? null
-                                  : () => _rejectComplaint(c),
-                              child: const Text('Reject'),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: c.status == ComplaintStatus.resolved || c.status == ComplaintStatus.rejected
+                                      ? null
+                                      : () => _solveComplaint(c),
+                                  child: const Text('Solve'),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  onPressed: c.status == ComplaintStatus.rejected || c.status == ComplaintStatus.resolved
+                                      ? null
+                                      : () => _rejectComplaint(c),
+                                  child: const Text('Reject'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
