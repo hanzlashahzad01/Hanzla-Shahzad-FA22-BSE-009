@@ -3,26 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Colors
-  static const Color primaryColor = Color(0xFF2196F3);
-  static const Color secondaryColor = Color(0xFF03A9F4);
-  static const Color accentColor = Color(0xFF00BCD4);
-  static const Color backgroundColor = Color(0xFFF5F5F5);
-  static const Color surfaceColor = Colors.white;
-  static const Color errorColor = Color(0xFFE57373);
-  static const Color successColor = Color(0xFF81C784);
-  static const Color warningColor = Color(0xFFFFB74D);
-
-  // Text Colors
-  static const Color textPrimaryColor = Color(0xFF212121);
-  static const Color textSecondaryColor = Color(0xFF757575);
-  static const Color textHintColor = Color(0xFFBDBDBD);
-
-  // Gradients
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryColor, secondaryColor],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
+  
 
   // Theme Data
   static ThemeData get lightTheme {
