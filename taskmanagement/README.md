@@ -6,7 +6,7 @@
 ##Add New Task
 
 
-                                      <img width="145" height="318" alt="c2" src="https://github.com/user-attachments/assets/61647c96-4b7f-4198-a4d9-6b38defe65d7" />
+<img width="145" height="318" alt="c2" src="https://github.com/user-attachments/assets/61647c96-4b7f-4198-a4d9-6b38defe65d7" />
 
 
 
