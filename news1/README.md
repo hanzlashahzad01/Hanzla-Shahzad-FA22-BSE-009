@@ -1,3 +1,1 @@
-![image alt](https://github.com/hanzlashahzad01/Hanzla-Shahzad-FA22-BSE-009/blob/5160fa70864515fc717f149765d5650e122be05f/news1/ss1.jpg
-)
-![image alt](https://github.com/hanzlashahzad01/Hanzla-Shahzad-FA22-BSE-009/blob/5160fa70864515fc717f149765d5650e122be05f/news1/ss2.jpg)
+![image alt](https://github.com/hanzlashahzad01/Hanzla-Shahzad-FA22-BSE-009/blob/5160fa70864515fc717f149765d5650e122be05f/news1/ss1.jpg) ![image alt](https://github.com/hanzlashahzad01/Hanzla-Shahzad-FA22-BSE-009/blob/5160fa70864515fc717f149765d5650e122be05f/news1/ss2.jpg)
